@@ -14,7 +14,9 @@ load_dotenv()
 conn = http.client.HTTPSConnection("api.vtex.com")
 TOKEN = os.getenv('TOKEN')
 SECRET_KEY = os.getenv('key')
-idloja = os.getenv('IDLOJA')
+idloja = os.getenv('loja_id')
+
+
 
 headers = {
             'Accept': "application/json",
@@ -24,7 +26,6 @@ headers = {
             }
 
 
-
 def calcula_preco(*args, **kwargs):
     for arg in args:
         
@@ -32,7 +33,7 @@ def calcula_preco(*args, **kwargs):
         print(calc)
         
      
-    conn.request("get", f"/t78536/pricing/prices/{arg.get('SKU ID',None)}/", headers=headers)
+    conn.request("get", f"/{idloja}/pricing/prices/{arg.get('SKU ID',None)}/", headers=headers)
 
     res = conn.getresponse()
     data = res.read()
@@ -57,11 +58,10 @@ def calcula_preco(*args, **kwargs):
     yield dict_product_prices
    
    
-
 def get_vtex_skus(*args: Any, **kwargs: dict[str, Any]) -> None:
     
     def get_skus() -> Generator[Any, Any, None]:
-        url = f"https://t78536.myvtex.com/api/catalog/pvt/product/{kwargs['id']}"
+        url = f"https://{idloja}.myvtex.com/api/catalog/pvt/product/{kwargs['id']}"
 
         payload: dict = {}
      
@@ -75,7 +75,7 @@ def get_vtex_skus(*args: Any, **kwargs: dict[str, Any]) -> None:
         while i < cont:
             if isinstance(args[i]['Id'], int):
                
-                url = f"https://t78536.myvtex.com/api/logistics/pvt/inventory/skus/{args[i]['Id']}"
+                url = f"https://{idloja}.myvtex.com/api/logistics/pvt/inventory/skus/{args[i]['Id']}"
                 payload: dict = {}
                 response = requests.request("GET", url, headers=headers, data=payload)
                 inventory = response.json()
@@ -109,19 +109,21 @@ def get_vtex_skus(*args: Any, **kwargs: dict[str, Any]) -> None:
     items = next(produtos_saldos)
     print(items)
 
+
+'''
 listas = [{'SKU ID':776,'BASE PRICE':21.00,'CANALVENDA':14,'CUSTOENVIO':0.01,'CNT':2.00},
          {'SKU ID':125,'BASE PRICE':1.99,'CANALVENDA':14,'CUSTOENVIO':0.20,'CNT':2.00},
          {'SKU ID':775,'BASE PRICE':22.00,'CANALVENDA':14,'CUSTOENVIO':1.00,'CNT':2.00}]
 for lista in listas:
     if isinstance(lista['SKU ID'], int):  
         jsons = get_vtex_skus(id = lista['SKU ID'])
-
+'''
 
 def update_prices_vtex(new_price, idproduct,policyid):
 
     def get_product_prices(idproduct):
        
-        conn.request("get", f"/t78536/pricing/prices/{idproduct}", headers=headers)
+        conn.request("get", f"/{idloja}/pricing/prices/{idproduct}", headers=headers)
 
         res = conn.getresponse()
         data = res.read()
@@ -158,7 +160,7 @@ def update_prices_vtex(new_price, idproduct,policyid):
                 ]
             })
         
-        conn.request("put", f"/t78536/pricing/prices/{prices['itemId']}", payload, headers)
+        conn.request("put", f"/{idloja}/pricing/prices/{prices['itemId']}", payload, headers)
 
         res = conn.getresponse()
         data = res.read()
@@ -167,6 +169,7 @@ def update_prices_vtex(new_price, idproduct,policyid):
     product_prices = get_product_prices(idproduct)
     update_prices(product_prices)
    
+'''
 #teste com simulação de parametros para atualização
 listas = [{'SKU ID':776,'BASE PRICE':21.00,'CANALVENDA':14,'CUSTOENVIO':0.01,'CNT':2.00},
          {'SKU ID':125,'BASE PRICE':1.99,'CANALVENDA':14,'CUSTOENVIO':0.20,'CNT':2.00},
@@ -179,3 +182,4 @@ for lista in listas:
   
     if isinstance(new_prices, dict):
         update_prices_vtex(new_prices['new_price'],new_prices['itemId'],1)
+'''

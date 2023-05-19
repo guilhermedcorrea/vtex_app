@@ -41,12 +41,13 @@ admin = Admin(current_app, name='Admin',
 current_app.config['FLASK_ADMIN_FLUID_LAYOUT'] = True
 
 
+'''
 class MyModelView(BaseModelView):
     column_extra_row_actions = [
         LinkRowAction('glyphicon glyphicon-off', 'http://direct.link/?id={row_id}'),
         EndpointLinkRowAction('glyphicon glyphicon-test', 'my_view.index_view')
     ]
-    
+'''   
  
 class UserView(ModelView):
     column_exclude_list = []
@@ -55,6 +56,8 @@ class UserView(ModelView):
     can_edit = True
     can_delete = False
     can_export = True
+    
+
 
 
 class ProdutosView(ModelView):

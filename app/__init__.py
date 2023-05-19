@@ -25,6 +25,4 @@ def create_app():
         migrate.init_app(app, db)
         app.register_blueprint(vtex)
         
-        
-
     return app
