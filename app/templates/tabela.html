@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <table id="data" class="table table-striped w-auto p-3">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>itemId</th>
+        <th>tradePolicyId</th>
+        <th>SKUId</th>
+        <th>listPrice</th>
+        <th>costPrice</th>
+        <th>basePrice</th>
+        <th>value</th>
+        <th>CustoEnvio</th>
+        <th>% CanalVenda</th>
+        <th>CNT</th>
+        <th>R$ Preço Final</th>
+        <th>Quantidade Estoque</th>
+        <th>GMV</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    $(document).ready(function () {
+      $('#data').DataTable({
+        ajax: '/api/data',
+        columns: [
+          {data: 'Nome'},
+          {data: 'itemId', searchable: false},
+          {data: 'tradePolicyId', orderable: false, searchable: false},
+          {data: 'SKUId', orderable: false, searchable: false},
+          {data: 'listPrice', orderable: false, searchable: false},
+          {data: 'costPrice'},
+          {data: 'basePrice'},
+          {data: 'value'},
+          {data: 'CustoEnvio'},
+          {data: '% CanalVenda'},
+          {data: 'CNT'},
+          {data: 'R$ Preço Final'},
+          {data: 'Quantidade Estoque'},
+          {data: 'GMV'},
+        ],
+      });
+    });
+  </script>
+{% endblock %}
+
